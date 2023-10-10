@@ -77,12 +77,15 @@ export class SignInController extends ControllerBase {
     if (otp.otp != this.otp) throw Error('קוד לא תקין')
     const user = await repo(User).findFirst({ phone: this.phone })
     if (!user) throw 'מספר טלפון לא מוכר'
-
+    const roles: string[] = []
+    if (user.admin) {
+      roles.push(Roles.admin)
+    }
     return setSessionUser(
       {
         id: user.id,
         name: user.name,
-        roles: [...(user.admin ? Roles.admin : [])],
+        roles,
       },
       this.rememberOnThisDevice
     )
