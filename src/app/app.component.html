@@ -3,6 +3,7 @@
     ><h1>עוזרים לצה״ל במה שאפשר ❤</h1>
     <h2>כניסה</h2>
     <data-area [settings]="area"> </data-area>
+    <button mat-raised-button color="primary" (click)="doSignIn()">כניסה</button>
   </app-card-in-middle>
 </div>
 
@@ -23,9 +24,7 @@
         <button mat-menu-item (click)="updateInfo()">
           {{ terms.updateInfo }}
         </button>
-        <button mat-menu-item (click)="changePassword()">
-          {{ terms.changePassword }}
-        </button>
+
         <button mat-menu-item (click)="signOut()">{{ terms.signOut }}</button>
       </mat-menu>
     </ng-container>

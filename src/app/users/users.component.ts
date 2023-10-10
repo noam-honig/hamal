@@ -46,7 +46,7 @@ export class UsersComponent implements OnInit {
               terms.passwordDeleteConfirmOf + ' ' + this.users.currentRow.name
             )
           ) {
-            await this.users.currentRow.resetPassword()
+            
             this.ui.info(terms.passwordDeletedSuccessful)
           }
         },

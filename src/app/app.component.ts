@@ -8,7 +8,6 @@ import { User } from './users/user'
 import { DataAreaDialogComponent } from './common/data-area-dialog/data-area-dialog.component'
 import { terms } from './terms'
 import { SignInController } from './users/SignInController'
-import { UpdatePasswordController } from './users/UpdatePasswordController'
 import { remult } from 'remult'
 import { DataAreaSettings } from './common-ui-elements/interfaces'
 
@@ -32,12 +31,15 @@ export class AppComponent implements OnInit {
     fields: () => [
       { field: this.signIn.$.phone, visible: () => !this.signIn.askForOtp },
       { field: this.signIn.$.otp, visible: () => this.signIn.askForOtp },
-      { Field: this.signIn.$.rememberOnThisDevice },
+      { field: this.signIn.$.rememberOnThisDevice },
     ],
   })
   async doSignIn() {
     if (!this.signIn.askForOtp) await this.signIn.signIn()
-    else this.remult.user = await this.signIn.signInWithOtp()
+    else {
+      this.remult.user = await this.signIn.signInWithOtp()
+      this.signIn = new SignInController()
+    }
   }
 
   ngOnInit(): void {}
@@ -58,20 +60,6 @@ export class AppComponent implements OnInit {
           fields: [user.$.name],
           ok: async () => {
             await user._.save()
-          },
-        })
-    )
-  }
-  async changePassword() {
-    const updatePassword = new UpdatePasswordController()
-    openDialog(
-      DataAreaDialogComponent,
-      (i) =>
-        (i.args = {
-          title: terms.signIn,
-          object: updatePassword,
-          ok: async () => {
-            await updatePassword.updatePassword()
           },
         })
     )

@@ -67,7 +67,7 @@ export class UIToolsService implements UITools {
     commonUIPlugin: CommonUIElementsPluginsService
   ) {
     commonUIPlugin.dataControlAugmenter = (fieldMetadata, options) => {
-      if (fieldMetadata.options.clickWithUI) {
+      if (fieldMetadata?.options.clickWithUI) {
         if (!options.click) {
           options.click = (entity, fieldRef) =>
             fieldMetadata.options.clickWithUI!(this, entity, fieldRef)

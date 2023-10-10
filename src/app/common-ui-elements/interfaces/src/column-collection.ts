@@ -326,7 +326,7 @@ export class FieldCollection<rowType = any> {
   private augmented = new Map<DataControlSettings, boolean>()
   augment(augmenter: dataControlAugmenter, s: DataControlSettings) {
     if (this.augmented.get(s)) return
-    augmenter(getFieldDefinition(s.field!)!, s)
+    if (s.field) augmenter(getFieldDefinition(s.field)!, s)
     this.augmented.set(s, true)
   }
   private _initColumnsArrays(augmenter: dataControlAugmenter) {

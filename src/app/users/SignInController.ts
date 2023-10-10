@@ -17,7 +17,7 @@ import { setSessionUser } from '../../server/server-session'
 const otp = '123456'
 @Controller('signIn')
 export class SignInController extends ControllerBase {
-  @BackendMethod({ allowed: true })
+  
   @Fields.string({
     caption: 'מספר טלפון נייד',
     validate: Validators.required,
@@ -50,13 +50,15 @@ export class SignInController extends ControllerBase {
       if ((await userRepo.count()) === 0) {
         //first ever user is the admin
         u = await userRepo.insert({
-          name: this.phone,
+          name:this.phone,
+          phone: this.phone,
           admin: true,
         })
       }
     }
     this.askForOtp = true
   }
+  @BackendMethod({ allowed: true })
   async signInWithOtp(): Promise<UserInfo> {
     const user = await repo(User).findFirst({ phone: this.phone })
     if (!user) throw 'מספר טלפון לא מוכר'
