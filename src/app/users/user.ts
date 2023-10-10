@@ -33,11 +33,13 @@ export class User extends IdEntity {
     caption: terms.username,
   })
   name = ''
-  @Fields.string({ includeInApi: false })
-  password = ''
-  @Fields.date({
-    allowApiUpdate: false,
+
+  @Fields.string({
+    caption: 'מספר טלפון',
+    inputType: 'tel',
   })
+  phone = ''
+  @Fields.createdAt()
   createDate = new Date()
 
   @Fields.boolean({
@@ -45,19 +47,4 @@ export class User extends IdEntity {
     caption: terms.admin,
   })
   admin = false
-
-  async hashAndSetPassword(password: string) {
-    this.password = (await import('password-hash')).generate(password)
-  }
-  async passwordMatches(password: string) {
-    return (
-      !this.password ||
-      (await import('password-hash')).verify(password, this.password)
-    )
-  }
-  @BackendMethod({ allowed: Roles.admin })
-  async resetPassword() {
-    this.password = ''
-    await this.save()
-  }
 }

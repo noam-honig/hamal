@@ -1,14 +1,20 @@
-<div style="height: 100%; display: flex; flex-direction: column">
+<div *ngIf="!remult.authenticated()">
+  <app-card-in-middle
+    ><h1>עוזרים לצה״ל במה שאפשר ❤</h1>
+    <h2>כניסה</h2>
+    <data-area [settings]="area"> </data-area>
+  </app-card-in-middle>
+</div>
+
+<div
+  style="height: 100%; display: flex; flex-direction: column"
+  *ngIf="remult.authenticated()"
+>
   <mat-toolbar color="primary" style="flex-shrink: 0">
     <button mat-button class="sidenav-toggle" (click)="sidenav.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
     <span class="toolbar-title">{{ currentTitle() }}</span>
-    <ng-container *ngIf="!remult.authenticated()">
-      <button mat-flat-button color="primary" (click)="signIn()">
-        {{ terms.signIn }}
-      </button>
-    </ng-container>
     <ng-container *ngIf="remult.authenticated()">
       <button mat-flat-button color="primary" [matMenuTriggerFor]="menu">
         {{ remult.user!.name }}

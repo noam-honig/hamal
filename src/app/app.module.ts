@@ -27,6 +27,7 @@ import { SignInController } from './users/SignInController'
 import { TextAreaDataControlComponent } from './common/textarea-data-control/textarea-data-control.component'
 import { DotsMenuComponent } from './common/dot-menu.component'
 import { AddressInputComponent } from './common-ui-elements/address-input/address-input.component'
+import { CardInMiddleComponent } from './card-in-middle/card-in-middle.component'
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { AddressInputComponent } from './common-ui-elements/address-input/addres
     TextAreaDataControlComponent,
     AddressInputComponent,
     DotsMenuComponent,
+    CardInMiddleComponent,
   ],
   imports: [
     BrowserModule,

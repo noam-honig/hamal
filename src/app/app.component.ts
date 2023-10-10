@@ -10,6 +10,7 @@ import { terms } from './terms'
 import { SignInController } from './users/SignInController'
 import { UpdatePasswordController } from './users/UpdatePasswordController'
 import { remult } from 'remult'
+import { DataAreaSettings } from './common-ui-elements/interfaces'
 
 @Component({
   selector: 'app-root',
@@ -26,19 +27,17 @@ export class AppComponent implements OnInit {
   terms = terms
   remult = remult
 
-  async signIn() {
-    const signIn = new SignInController()
-    openDialog(
-      DataAreaDialogComponent,
-      (i) =>
-        (i.args = {
-          title: terms.signIn,
-          object: signIn,
-          ok: async () => {
-            remult.user = await signIn.signIn()
-          },
-        })
-    )
+  signIn = new SignInController()
+  area = new DataAreaSettings({
+    fields: () => [
+      { field: this.signIn.$.phone, visible: () => !this.signIn.askForOtp },
+      { field: this.signIn.$.otp, visible: () => this.signIn.askForOtp },
+      { Field: this.signIn.$.rememberOnThisDevice },
+    ],
+  })
+  async doSignIn() {
+    if (!this.signIn.askForOtp) await this.signIn.signIn()
+    else this.remult.user = await this.signIn.signInWithOtp()
   }
 
   ngOnInit(): void {}

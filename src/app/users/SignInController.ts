@@ -5,6 +5,7 @@ import {
   ControllerBase,
   Fields,
   remult,
+  repo,
   UserInfo,
   Validators,
 } from 'remult'
@@ -13,24 +14,28 @@ import { Roles } from './roles'
 import { User } from './user'
 import { setSessionUser } from '../../server/server-session'
 
+const otp = '123456'
 @Controller('signIn')
 export class SignInController extends ControllerBase {
+  @BackendMethod({ allowed: true })
   @Fields.string({
-    caption: terms.username,
+    caption: 'מספר טלפון נייד',
     validate: Validators.required,
+    inputType: 'tel',
   })
-  user = ''
+  phone = ''
   @Fields.string({
-    caption: terms.password,
-    validate: Validators.required,
-    inputType: 'password',
+    caption: 'קוד חד פעמי',
+    inputType: 'tel',
   })
-  password = ''
-
+  otp = ''
   @Fields.boolean({
     caption: terms.rememberOnThisDevice,
   })
   rememberOnThisDevice = false
+
+  @Fields.boolean()
+  askForOtp = false
 
   @BackendMethod({ allowed: true })
   /**
@@ -39,42 +44,33 @@ export class SignInController extends ControllerBase {
    * 2. When a user that has no password signs in, that password that they've signed in with is set as the users password
    */
   async signIn() {
-    let result: UserInfo | undefined
     const userRepo = remult.repo(User)
-    let u = await userRepo.findFirst({ name: this.user })
+    let u = await userRepo.findFirst({ phone: this.phone })
     if (!u) {
       if ((await userRepo.count()) === 0) {
         //first ever user is the admin
         u = await userRepo.insert({
-          name: this.user,
+          name: this.phone,
           admin: true,
         })
       }
     }
-    if (u) {
-      if (!u.password) {
-        // if the user has no password defined, the first password they use is their password
-        u.hashAndSetPassword(this.password)
-        await u.save()
-      }
-
-      if (await u.passwordMatches(this.password)) {
-        result = {
-          id: u.id,
-          roles: [],
-          name: u.name,
-        }
-        if (u.admin) {
-          result.roles!.push(Roles.admin)
-        }
-      }
-    }
-
-    if (result) {
-      return setSessionUser(result, this.rememberOnThisDevice)
-    }
-    throw new Error(terms.invalidSignIn)
+    this.askForOtp = true
   }
+  async signInWithOtp(): Promise<UserInfo> {
+    const user = await repo(User).findFirst({ phone: this.phone })
+    if (!user) throw 'מספר טלפון לא מוכר'
+    if (otp != this.otp) throw 'קוד לא תקין'
+    return setSessionUser(
+      {
+        id: user.id,
+        name: user.name,
+        roles: [...(user.admin ? Roles.admin : [])],
+      },
+      this.rememberOnThisDevice
+    )
+  }
+
   @BackendMethod({ allowed: Allow.authenticated })
   static signOut() {
     setSessionUser(undefined!, true)
