@@ -37,8 +37,7 @@ export class AppComponent implements OnInit {
   async doSignIn() {
     if (!this.signIn.askForOtp) await this.signIn.signIn()
     else {
-      this.remult.user = await this.signIn.signInWithOtp()
-      this.signIn = new SignInController()
+      remult.user = await this.signIn.signInWithOtp()
     }
   }
 
@@ -46,7 +45,9 @@ export class AppComponent implements OnInit {
 
   signOut() {
     SignInController.signOut()
+
     remult.user = undefined
+    location.reload()
     this.router.navigate(['/'])
   }
 
