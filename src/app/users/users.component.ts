@@ -39,16 +39,8 @@ export class UsersComponent implements OnInit {
     ],
     rowButtons: [
       {
-        name: terms.resetPassword,
-        click: async () => {
-          if (
-            await this.ui.yesNoQuestion(
-              terms.passwordDeleteConfirmOf + ' ' + this.users.currentRow.name
-            )
-          ) {
-            this.ui.info(terms.passwordDeletedSuccessful)
-          }
-        },
+        name: 'פרטים',
+        click: async (e) => e.editDialog(this.ui),
       },
     ],
     confirmDelete: async (h) => {
@@ -57,14 +49,7 @@ export class UsersComponent implements OnInit {
   })
   async addVolunteer() {
     const v = repo(User).create()
-    this.ui.areaDialog({
-      title: 'הוספת מתנדב',
-      fields: [v.$.name, v.$.phone, v.$.admin],
-      ok: async () => {
-        await v.save()
-        this.users.items.splice(0, 0, v)
-      },
-    })
+    v.editDialog(this.ui, () => this.users.items.splice(0, 0, v))
   }
 
   ngOnInit() {}

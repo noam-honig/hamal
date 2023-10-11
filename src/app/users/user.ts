@@ -10,6 +10,7 @@ import {
 import { Roles } from './roles'
 import { terms } from '../terms'
 import { PhoneField } from '../events/phone'
+import { UITools } from '../common/UITools'
 
 @Entity<User>('Users', {
   allowApiRead: Allow.authenticated,
@@ -38,6 +39,13 @@ export class User extends IdEntity {
     inputType: 'tel',
   })
   phone = ''
+  @Fields.string({
+    caption: 'הערות מנהלים',
+    includeInApi: Roles.admin,
+    customInput: (x) => x.textarea(),
+  })
+  adminNotes = ''
+
   @Fields.createdAt()
   createDate = new Date()
 
@@ -49,4 +57,16 @@ export class User extends IdEntity {
     caption: terms.admin,
   })
   admin = false
+
+  editDialog(ui: UITools, onOk?: () => void) {
+    const v = this
+    ui.areaDialog({
+      title: 'פרטי מתנדב',
+      fields: [v.$.name, v.$.phone, v.$.admin, v.$.adminNotes],
+      ok: async () => {
+        await v.save()
+        onOk?.()
+      },
+    })
+  }
 }
