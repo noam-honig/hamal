@@ -7,7 +7,7 @@
     "dev": "concurrently \"npm:dev-api\" \"npm:dev-web\" -k -n \"API,WEB\" -c \"bgBlue.bold,bgGreen.bold\" ",
     "ng": "ng",
     "start": "tsx src/server/",
-    "build": "ng build --prod",
+    "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
