@@ -4,6 +4,8 @@ import helmet from 'helmet'
 import compression from 'compression'
 import { api } from './api'
 import session from 'cookie-session'
+import fs from 'fs'
+import { getTitle } from '../app/users/SignInController'
 
 async function startup() {
   const app = express()
@@ -30,7 +32,14 @@ async function startup() {
       return
     }
     try {
-      res.sendFile(process.cwd() + '/dist/angular-starter-project/index.html')
+      res.send(
+        fs
+          .readFileSync(
+            process.cwd() + '/dist/angular-starter-project/index.html'
+          )
+          .toString()
+          .replace(/!!!NAME!!!/g, getTitle())
+      )
     } catch (err) {
       res.sendStatus(500)
     }

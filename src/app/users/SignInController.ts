@@ -26,7 +26,7 @@ export class SignInController extends ControllerBase {
   })
   phone = ''
   @Fields.string({
-    caption: 'קוד חד פעמי',
+    caption: 'קוד שהתקבל בהודעת SMS',
     inputType: 'tel',
   })
   otp = ''
@@ -61,10 +61,9 @@ export class SignInController extends ControllerBase {
     d.setMinutes(d.getMinutes() + 5)
     const otp = generateRandomSixDigitNumber()
 
-    await sendSms(
-      this.phone,
-      `הקוד לכניסה לעוזרים לצה"ל במה שאפשר הוא: ` + otp
-    ).then((x) => console.log('sent', x))
+    await sendSms(this.phone, `הקוד לכניסה ל${getTitle()} הוא: ` + otp).then(
+      (x) => console.log('sent', x)
+    )
     otps.set(this.phone, { otp: otp, expire: d })
     this.askForOtp = true
   }
@@ -110,3 +109,9 @@ function generateRandomSixDigitNumber() {
 }
 
 const otps = new Map<string, { otp: string; expire: Date }>()
+export function getTitle() {
+  if (typeof localStorage !== 'undefined') return document.title
+  return process.env['NAME'] || DEFAULT_NAME
+}
+
+const DEFAULT_NAME = 'עוזרים לצה״ל במה שאפשר'

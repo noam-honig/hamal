@@ -1,6 +1,6 @@
 <div *ngIf="!remult.authenticated()">
   <app-card-in-middle
-    ><h1>עוזרים לצה״ל במה שאפשר ❤</h1>
+    ><h1>{{ title }}</h1>
     <h2>כניסה</h2>
     <data-area [settings]="area"> </data-area>
     <button mat-raised-button color="primary" (click)="doSignIn()">

@@ -82,6 +82,7 @@ export class AppComponent implements OnInit {
       }
     return 'angular-starter-project'
   }
+  title = document.title
 
   shouldDisplayRoute(route: Route) {
     if (
