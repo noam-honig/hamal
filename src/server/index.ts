@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Response } from 'express'
 import sslRedirect from 'heroku-ssl-redirect'
 import helmet from 'helmet'
 import compression from 'compression'
@@ -22,7 +22,8 @@ async function startup() {
   //app.use(helmet({ contentSecurityPolicy: false }))
 
   app.use(api)
-
+  app.get('/', (req, res) => sendIndex(res))
+  app.get('/index.html', (req, res) => sendIndex(res))
   app.use(express.static('dist/angular-starter-project'))
   app.use('/*', async (req, res) => {
     req.session
@@ -32,19 +33,23 @@ async function startup() {
       return
     }
     try {
-      res.send(
-        fs
-          .readFileSync(
-            process.cwd() + '/dist/angular-starter-project/index.html'
-          )
-          .toString()
-          .replace(/!!!NAME!!!/g, getTitle())
-      )
+      sendIndex(res)
     } catch (err) {
       res.sendStatus(500)
     }
   })
   let port = process.env['PORT'] || 3002
   app.listen(port)
+
+  function sendIndex(res: Response) {
+    res.send(
+      fs
+        .readFileSync(
+          process.cwd() + '/dist/angular-starter-project/index.html'
+        )
+        .toString()
+        .replace(/!!!NAME!!!/g, getTitle())
+    )
+  }
 }
 startup()
