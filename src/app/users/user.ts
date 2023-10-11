@@ -49,7 +49,7 @@ export class User extends IdEntity {
   @Fields.createdAt()
   createDate = new Date()
 
-  @Fields.string({ allowApiUpdate: false })
+  @Fields.string({ allowApiUpdate: false, includeInApi: Roles.admin })
   createUserId = remult.user?.id || 'no user'
 
   @Fields.boolean({

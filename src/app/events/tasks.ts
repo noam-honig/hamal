@@ -137,7 +137,7 @@ export class Task extends IdEntity {
   registeredVolunteers = 0
   @Fields.createdAt()
   createdAt = new Date()
-  @Fields.string()
+  @Fields.string({ includeInApi: Roles.admin, allowApiUpdate: false })
   createUserId = remult.user?.id!
 
   @Fields.boolean<Task>({
