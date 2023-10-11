@@ -48,8 +48,6 @@ export function isPhoneValidForIsrael(input: string) {
   return false
 }
 
-//[ ] - add volunteer button
-
 export function PhoneField<entityType>(
   options?: StringFieldOptions<entityType>
 ) {
@@ -63,7 +61,7 @@ export function PhoneField<entityType>(
         fieldRef: FieldRef<entityType, string>
       ) => any | Promise<any>)[] = [
     (_, f) => {
-      if (!f.validate) return
+      if (!f.value) return
       f.value = fixPhoneInput(f.value)
       if (!isPhoneValidForIsrael(f.value)) throw new Error('טלפון לא תקין')
     },
