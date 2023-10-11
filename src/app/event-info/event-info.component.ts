@@ -57,7 +57,7 @@ export class EventInfoComponent implements OnInit {
 
   ngOnInit(): void {}
   edit() {
-    if (this.e instanceof Event) this.e.openEditDialog(this.dialog)
+    this.e.openEditDialog(this.dialog)
   }
   getCity() {
     return getCity(this.e.addressApiResult?.results[0]?.address_components!)

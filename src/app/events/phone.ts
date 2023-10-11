@@ -1,3 +1,11 @@
+import {
+  FieldRef,
+  FieldValidator,
+  Fields,
+  StringFieldOptions,
+  Validators,
+} from 'remult'
+
 export function sendWhatsappToPhone(
   phone: string,
   smsMessage: string,
@@ -39,6 +47,47 @@ export function isPhoneValidForIsrael(input: string) {
   }
   return false
 }
-//[ ] - clean and validate phone
-//[ ] - display phone correctly
+
 //[ ] - add volunteer button
+
+export function PhoneField<entityType>(
+  options?: StringFieldOptions<entityType>
+) {
+  const validate:
+    | ((
+        entity: entityType,
+        fieldRef: FieldRef<entityType, string>
+      ) => any | Promise<any>)
+    | ((
+        entity: entityType,
+        fieldRef: FieldRef<entityType, string>
+      ) => any | Promise<any>)[] = [
+    (_, f) => {
+      if (!f.validate) return
+      f.value = fixPhoneInput(f.value)
+      if (!isPhoneValidForIsrael(f.value)) throw new Error('טלפון לא תקין')
+    },
+  ]
+  if (options?.validate) {
+    if (!Array.isArray(options.validate)) options.validate = [options.validate]
+    validate.push(...options.validate)
+  }
+  return Fields.string({
+    caption: 'מספר טלפון',
+    inputType: 'tel',
+    displayValue: (_, value) => formatPhone(value),
+    ...options,
+    validate,
+  })
+}
+
+export function formatPhone(s: string) {
+  if (!s) return s
+  let x = s.replace(/\D/g, '')
+  if (x.length < 9 || x.length > 10) return s
+  if (x.length < 10 && !x.startsWith('0')) x = '0' + x
+
+  x = x.substring(0, x.length - 4) + '-' + x.substring(x.length - 4, x.length)
+  x = x.substring(0, x.length - 8) + '-' + x.substring(x.length - 8, x.length)
+  return x
+}

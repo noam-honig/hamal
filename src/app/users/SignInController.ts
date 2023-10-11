@@ -14,11 +14,12 @@ import { Roles } from './roles'
 import { User } from './user'
 import { setSessionUser } from '../../server/server-session'
 import { sendSms } from '../../server/send-sms'
+import { PhoneField } from '../events/phone'
 
 const otp = '123456'
 @Controller('signIn')
 export class SignInController extends ControllerBase {
-  @Fields.string({
+  @PhoneField({
     caption: 'מספר טלפון נייד',
     validate: Validators.required,
     inputType: 'tel',

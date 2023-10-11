@@ -5,13 +5,11 @@ import {
   isBackend,
   Allow,
   Fields,
-  BackendMethod,
-  Remult,
   remult,
 } from 'remult'
 import { Roles } from './roles'
 import { terms } from '../terms'
-import { fixPhoneInput, isPhoneValidForIsrael } from '../events/phone'
+import { PhoneField } from '../events/phone'
 
 @Entity<User>('Users', {
   allowApiRead: Allow.authenticated,
@@ -35,16 +33,8 @@ export class User extends IdEntity {
   })
   name = ''
 
-  @Fields.string({
-    caption: 'מספר טלפון',
-    validate: [
-      Validators.required,
-      (_, f) => {
-        f.value = fixPhoneInput(f.value)
-        if (!isPhoneValidForIsrael(f.value)) throw new Error('טלפון לא תקין')
-      },
-      Validators.uniqueOnBackend,
-    ],
+  @PhoneField({
+    validate: [Validators.required, Validators.uniqueOnBackend],
     inputType: 'tel',
   })
   phone = ''

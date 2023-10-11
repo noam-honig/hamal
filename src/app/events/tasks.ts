@@ -25,6 +25,7 @@ import moment from 'moment'
 import { Roles } from '../users/roles'
 import { UITools } from '../common/UITools'
 import { GeocodeResult } from '../common/address-input/google-api-helpers'
+import { PhoneField } from './phone'
 
 @ValueListFieldType({
   caption: 'סטטוס משימה',
@@ -122,7 +123,7 @@ export class Task extends IdEntity {
   okWithoutCar = false
   @Fields.boolean({ caption: 'אפשר מהבית' })
   okFromHome = false
-  @Fields.string({ caption: 'טלפון', inputType: 'tel' })
+  @PhoneField()
   phone1 = ''
   @Fields.string({ caption: 'איש קשר' })
   phone1Description = ''
@@ -324,4 +325,3 @@ where helper not in (select id from helpers where doNotSendSms=true)
 order by 3 desc
 
 */
-//[ ] סינון לפי קטגוריה
