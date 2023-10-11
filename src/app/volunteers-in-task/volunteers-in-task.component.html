@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>מתנדבים ל {{ args.task.title }}</h1>
+<div *ngFor="let v of volunteers">
+  <h3>{{ v.volunteer?.name }}</h3>
+
+  <div mat-dialog-content>
+    <span
+      mat-mini-fab
+      style="vertical-align: middle; cursor: pointer"
+      color="primary"
+      (click)="sendWhatsapp(v)"
+    >
+      <img src="assets/whatsapp.png" />
+    </span>
+    <a href="tel:{{ v.volunteer?.phone }}">
+      <button mat-mini-fab style="vertical-align: middle" color="primary">
+        <mat-icon>call</mat-icon>
+      </button>
+      {{ v.volunteer?.$?.phone?.displayValue }}
+    </a>
+  </div>
+  <hr />
+</div>
+
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" [mat-dialog-close]>סגור</button>
+</div>

@@ -34,7 +34,8 @@ import { EventInfoComponent } from './event-info/event-info.component'
 import {
   TransitionGroupComponent,
   TransitionGroupItemDirective,
-} from './event-card/transition-group'
+} from './event-card/transition-group';
+import { VolunteersInTaskComponent } from './volunteers-in-task/volunteers-in-task.component'
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import {
     EventInfoComponent,
     TransitionGroupItemDirective,
     TransitionGroupComponent,
+    VolunteersInTaskComponent,
   ],
   imports: [
     BrowserModule,

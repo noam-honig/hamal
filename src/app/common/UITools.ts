@@ -5,8 +5,10 @@ import {
   GridSettings,
   RowButton,
 } from '../common-ui-elements/interfaces'
+import { Task } from '../events/tasks'
 
 export interface UITools {
+  showVolunteers(task: Task): Promise<void>
   selectValuesDialog<
     T extends {
       caption?: string

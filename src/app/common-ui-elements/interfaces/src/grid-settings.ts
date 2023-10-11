@@ -8,6 +8,7 @@ import {
   getEntityRef,
   Repository,
   Filter,
+  MembersToInclude,
 } from 'remult'
 
 import { FieldCollection } from './column-collection'
@@ -425,6 +426,7 @@ export class GridSettings<rowType = any> {
     if (this.settings!.where) {
       opt.where = await Filter.resolve(this.settings!.where)
     }
+    if (this.settings?.include) opt.include = this.settings.include
     if (this.settings!.orderBy) opt.orderBy = this.settings!.orderBy
 
     if (this._currentOrderBy)
@@ -472,7 +474,7 @@ export interface IDataSettings<rowType> {
   rowCssClass?: (row: rowType) => string
   rowButtons?: RowButton<rowType>[]
   gridButtons?: GridButton[]
-
+  include?: MembersToInclude<rowType>
   /** filters the data
    * @example
    * await taskRepo.find({where: { completed:false }})

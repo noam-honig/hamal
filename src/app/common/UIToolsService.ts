@@ -17,6 +17,8 @@ import {
 } from './UITools'
 import { TextAreaDataControlComponent } from './textarea-data-control/textarea-data-control.component'
 import { AddressInputComponent } from './address-input/address-input.component'
+import { Task } from '../events/tasks'
+import { VolunteersInTaskComponent } from '../volunteers-in-task/volunteers-in-task.component'
 
 @Injectable()
 export class UIToolsService implements UITools {
@@ -29,6 +31,15 @@ export class UIToolsService implements UITools {
       zone.run(() => /*this.mediaMatcher = mql*/ ''.toString())
     )
     this.enhanceFieldOptionsAndDataControlOptions(commonUIPlugin)
+  }
+  showVolunteers(task: Task): Promise<void> {
+    return openDialog(
+      VolunteersInTaskComponent,
+      (x) =>
+        (x.args = {
+          task,
+        })
+    )
   }
 
   info(info: string): any {

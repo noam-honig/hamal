@@ -1,4 +1,8 @@
-<button mat-raised-button color="primary" (click)="addVolunteer()">
-  הוסף מתנדב
-</button>
-<data-grid [settings]="users"></data-grid>
+<div class="full-page">
+  <div>
+    <button mat-raised-button color="primary" (click)="addVolunteer()">
+      הוסף מתנדב
+    </button>
+  </div>
+  <data-grid [settings]="users" class="grow-item"></data-grid>
+</div>

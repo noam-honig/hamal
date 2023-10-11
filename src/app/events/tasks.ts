@@ -77,7 +77,7 @@ export class Category {
 export class Task extends IdEntity {
   async showVolunteers(ui: UITools) {
     if (remult.isAllowed(Roles.admin)) await this.save()
-    await volunteerInTask.displayVolunteer({ event: this, ui })
+    await ui.showVolunteers(this)
     await this._.reload()
   }
 
@@ -189,7 +189,7 @@ export class Task extends IdEntity {
       buttons: [
         {
           text: 'הצג מתנדבים',
-          click: () => this.showVolunteers(ui),
+          click: () => ui.showVolunteers(this),
         },
       ],
     })

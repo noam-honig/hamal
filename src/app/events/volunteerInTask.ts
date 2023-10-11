@@ -65,32 +65,4 @@ export class volunteerInTask extends IdEntity {
   registerStatusDate = new Date()
   @Fields.string({ allowNull: true })
   cancelUserId: string | null = null
-
-  static async displayVolunteer({ event, ui }: { event: Task; ui: UITools }) {
-    const gridSettings: GridSettings<volunteerInTask> =
-      new GridSettings<volunteerInTask>(remult.repo(volunteerInTask), {
-        columnOrderStateKey: 'volunteers-in-event',
-        rowsInPage: 50,
-        allowUpdate: true,
-        where: () => ({ taskId: event.id }),
-        orderBy: { registerStatusDate: 'desc' },
-        knowTotalRows: true,
-        numOfColumnsInGrid: 10,
-        columnSettings: (ev: FieldsMetadata<volunteerInTask>) => [
-          { width: '100', field: ev.volunteerId, readonly: true },
-          ev.registerStatusDate,
-          ev.createUserId,
-          ev.canceled,
-        ],
-        rowCssClass: (v) => {
-          if (v.canceled) return 'forzen'
-          return ''
-        },
-      })
-    await ui.gridDialog({
-      title: event.title,
-
-      settings: gridSettings,
-    })
-  }
 }
