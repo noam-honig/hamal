@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core'
-import { Fields, getFields, remult } from 'remult'
+import { Field, Fields, getFields, remult } from 'remult'
 import { EventInfoComponent } from '../event-info/event-info.component'
 import { DataAreaSettings, RowButton } from '../common-ui-elements/interfaces'
 import { BusyService, openDialog } from '../common-ui-elements'
 
 import * as copy from 'copy-to-clipboard'
 import { UIToolsService } from '../common/UIToolsService'
-import { Task, eventDisplayDate, taskStatus } from '../events/tasks'
+import { Category, Task, eventDisplayDate, taskStatus } from '../events/tasks'
 import { Roles } from '../users/roles'
 import {
   Location,
@@ -16,9 +16,9 @@ import {
   getLocation,
   getCurrentLocation,
 } from '../common/address-input/google-api-helpers'
-const AllTypes = {
+const AllCategories = {
   id: 'asdfaetfsafads',
-  caption: 'כל הסוגים',
+  caption: 'הכל',
   count: 0,
 }
 @Component({
@@ -59,8 +59,8 @@ export class EventCardComponent implements OnInit {
     caption: 'איפה?',
   })
   city: string = ''
-  @Fields.string({ caption: 'סוג משימה' })
-  type = 'הכל'
+  @Field(() => Category, { caption: 'קטגוריה' })
+  category = AllCategories
   area!: DataAreaSettings
 
   _tasks!: Task[]
@@ -95,10 +95,14 @@ export class EventCardComponent implements OnInit {
           caption: '',
         })
       } else city.count++
-      // let type = this.types.find((c) => c.id == e.type?.id)
-      // if (!type) {
-      //   this.types.push({ id: e.type?.id, count: 1, caption: e.type?.caption })
-      // } else type.count++
+      let type = this.types.find((c) => c.id == e.category?.id)
+      if (!type) {
+        this.types.push({
+          id: e.category.id!,
+          count: 1,
+          caption: e.category?.caption,
+        })
+      } else type.count++
     }
     this.cities.sort((b, a) => a.count - b.count)
     this.cities.forEach((c) => (c.caption = c.id + ' - ' + c.count))
@@ -111,7 +115,7 @@ export class EventCardComponent implements OnInit {
     this.types.sort((b, a) => a.count - b.count)
     this.types.forEach((c) => (c.caption = c.caption + ' - ' + c.count))
 
-    this.types.splice(0, 0, AllTypes)
+    this.types.splice(0, 0, AllCategories)
 
     this.dates = this.dates.filter((d) => d.events.length > 0)
     this.sortEvents()
@@ -124,7 +128,7 @@ export class EventCardComponent implements OnInit {
             visible: () => this.cities.length > 2,
           },
           {
-            field: this.$.type,
+            field: this.$.category,
             valueList: this.types,
             visible: () => this.types.length > 2,
           },
@@ -135,10 +139,10 @@ export class EventCardComponent implements OnInit {
 
   filter(e: Task) {
     return (
-      (this.city == '' || this.eventCity(e) == this.city) && 1 == 1
-      // (this.type == undefined ||
-      //   this.type == AllTypes ||
-      //   e.type.id == this.type.id)
+      (this.city == '' || this.eventCity(e) == this.city) &&
+      (this.category == undefined ||
+        this.category == AllCategories ||
+        e.category.id == this.category.id)
     )
   }
   hasEvents(d: dateEvents) {

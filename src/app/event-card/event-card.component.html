@@ -66,9 +66,7 @@
 
                 <span (click)="eventDetails(e)">
                   {{ distance(e) }} {{ eventCity(e) }}
-                  <!-- <span *ngIf="showEventType(e)"
-                    >, {{ e.type.caption }}
-                  </span> -->
+                  <span>, {{ e.category?.caption || '' }} </span>
                 </span>
                 <div (click)="eventDetails(e)">
                   <strong>{{ displayDate(e) }}</strong>
