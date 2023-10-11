@@ -1,6 +1,11 @@
 <div class="full-page">
   <div>
-    <button mat-raised-button color="primary" (click)="addTask()">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="addTask()"
+      *ngIf="isAdmin()"
+    >
       הוספת משימה
     </button>
   </div>
