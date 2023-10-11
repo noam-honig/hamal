@@ -12,7 +12,7 @@ async function startup() {
     session({
       secret:
         process.env['NODE_ENV'] === 'production'
-          ? process.env['TOKEN_SIGN_KEY']
+          ? process.env['SESSION_SECRET']
           : 'my secret',
     })
   )
