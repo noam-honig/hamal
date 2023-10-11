@@ -6,7 +6,7 @@ import { Roles } from './roles'
 
 import { terms } from '../terms'
 import { GridSettings } from 'common-ui-elements/interfaces'
-import { remult } from 'remult'
+import { remult, repo } from 'remult'
 import { saveToExcel } from '../common-ui-elements/interfaces/src/saveGridToExcel'
 import { BusyService } from '../common-ui-elements'
 
@@ -22,8 +22,8 @@ export class UsersComponent implements OnInit {
   }
 
   users: GridSettings<User> = new GridSettings<User>(remult.repo(User), {
-    allowDelete: true,
-    allowInsert: true,
+    allowDelete: false,
+    allowInsert: false,
     allowUpdate: true,
     columnOrderStateKey: 'users',
 
@@ -55,6 +55,17 @@ export class UsersComponent implements OnInit {
       return await this.ui.confirmDelete(h.name)
     },
   })
+  async addVolunteer() {
+    const v = repo(User).create()
+    this.ui.areaDialog({
+      title: 'הוספת מתנדב',
+      fields: [v.$.name, v.$.phone, v.$.admin],
+      ok: async () => {
+        await v.save()
+        this.users.items.splice(0, 0, v)
+      },
+    })
+  }
 
   ngOnInit() {}
 }
