@@ -4,6 +4,7 @@ import { UIToolsService } from '../UIToolsService'
 
 export function getCity(address_component: AddressComponent[]) {
   let r = undefined
+  if (!address_component) return ''
   address_component.forEach((x) => {
     if (x.types.includes('locality')) r = x.long_name
   })
