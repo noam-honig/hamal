@@ -71,9 +71,7 @@
                   </span> -->
                 </span>
                 <div (click)="eventDetails(e)">
-                  <strong>{{ displayDate(e) }}</strong
-                  ><span *ngIf="e.startTime">, {{ e.startTime }}</span
-                  ><span *ngIf="e.endTime"> - {{ e.endTime }}</span>
+                  <strong>{{ displayDate(e) }}</strong>
                 </div>
                 <span *ngIf="isFull(e)">{{ 'נרשמו מספיק מתנדבים' }}</span>
                 <a (click)="eventDetails(e)" *ngIf="!isFull(e)">{{

@@ -237,7 +237,7 @@ function compareEventDate(a: Task, b: Task) {
   let r = a.eventDate.valueOf() - b.eventDate.valueOf()
 
   if (r != 0) return r
-  return a.startTime?.localeCompare(b.startTime)
+  return (a.createdAt?.valueOf() || 0) - (b.createdAt?.valueOf() || 0)
 }
 
 interface dateEvents {

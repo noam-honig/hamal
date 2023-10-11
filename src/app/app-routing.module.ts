@@ -9,10 +9,9 @@ import { ShowDialogOnErrorErrorHandler } from './common/UIToolsService'
 import { terms } from './terms'
 import { OrgEventsComponent } from './events/org-events.component'
 
-const defaultRoute = terms.home
+const defaultRoute = 'משימות'
 const routes: Routes = [
-  { path: defaultRoute, component: HomeComponent },
-  { path: 'משימות', component: OrgEventsComponent },
+  { path: defaultRoute, component: OrgEventsComponent },
   {
     path: terms.userAccounts,
     component: UsersComponent,

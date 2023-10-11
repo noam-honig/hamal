@@ -37,6 +37,25 @@ export class taskStatus {
 
   constructor(public id: number, public caption: string) {}
 }
+
+@ValueListFieldType({
+  caption: 'קטגוריה',
+  getValues: () => [
+    Category.delivery,
+
+    new Category('איסוף מזון וציוד'),
+    new Category('אחר'),
+  ],
+})
+export class Category {
+  static delivery = new Category('שינוע')
+  constructor(
+    public caption: string,
+    public id: string | undefined = undefined
+  ) {
+    if (!id) this.id = caption
+  }
+}
 @Entity<Task>('tasks', {
   allowApiCrud: Roles.admin,
   allowApiRead: Allow.authenticated,
@@ -71,6 +90,8 @@ export class Task extends IdEntity {
     customInput: (x) => x.textarea(),
   })
   description = ''
+  @Field(() => Category)
+  category = Category.delivery
   @Fields.dateOnly<Task>({
     caption: 'תאריך',
     validate: (s, c) => {
@@ -78,12 +99,12 @@ export class Task extends IdEntity {
     },
   })
   eventDate: Date = new Date()
-  @Fields.string({ inputType: 'time', caption: 'שעה' })
-  @DataControl({ width: '110' })
-  startTime = '08:00'
-  @Fields.string({ inputType: 'time', caption: 'שעת סיום' })
-  @DataControl({ width: '110' })
-  endTime = ''
+  // @Fields.string({ inputType: 'time', caption: 'שעה' })
+  // @DataControl({ width: '110' })
+  // startTime = '08:00'
+  // @Fields.string({ inputType: 'time', caption: 'שעת סיום' })
+  // @DataControl({ width: '110' })
+  // endTime = ''
   @Fields.integer({ caption: 'מספר מתנדבים נדרש' })
   requiredVolunteers = 1
   @Fields.json<GeocodeResult>()
@@ -109,6 +130,10 @@ export class Task extends IdEntity {
     caption: 'מתנדבים רשומים',
   })
   registeredVolunteers = 0
+  @Fields.createdAt()
+  createdAt = new Date()
+  @Fields.string()
+  createUserId = remult.user?.id!
 
   openEditDialog(
     ui: UITools,
@@ -119,16 +144,17 @@ export class Task extends IdEntity {
     ui.areaDialog({
       title: 'פרטי משימה',
       fields: [
+        e.category,
         e.title,
         e.description,
         e.eventDate,
-        [e.startTime, e.endTime],
         e.address,
         e.phone1,
         e.phone1Description,
         e.requiredVolunteers,
         e.okWithoutCar,
         e.okFromHome,
+        e.eventStatus,
       ],
       ok: () => this.save().then(() => saved && saved()),
       cancel: () => {
@@ -158,23 +184,6 @@ export class Task extends IdEntity {
         },
       },
     ]
-  }
-
-  static displayColumns(e: FieldsMetadata<Task>, ui: UITools) {
-    let r = [
-      e.title,
-      e.description,
-      { width: '150', field: e.eventDate },
-      e.startTime,
-      e.endTime,
-      { width: '100', field: e.requiredVolunteers },
-      { width: '100', field: e.registeredVolunteers },
-      { width: '150', field: e.eventStatus },
-      e.address,
-      e.phone1,
-      e.phone1Description,
-    ]
-    return r
   }
 }
 export function mapFieldMetadataToFieldRef(
@@ -315,3 +324,4 @@ where helper not in (select id from helpers where doNotSendSms=true)
 order by 3 desc
 
 */
+//[ ] סינון לפי קטגוריה
