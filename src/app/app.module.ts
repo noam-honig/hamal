@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core'
+import { APP_INITIALIZER, NgModule, NgZone } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
@@ -78,7 +78,12 @@ import {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(zone: NgZone) {
+    remult.apiClient.wrapMessageHandling = (handler) =>
+      zone.run(() => handler())
+  }
+}
 
 export function initApp() {
   const loadCurrentUserBeforeAppStarts = async () => {

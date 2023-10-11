@@ -211,8 +211,7 @@ export class EventCardComponent implements OnInit {
     } catch {}
   }
   isRegisteredToEvent(task: Task) {
-    console.log('not implemented ')
-    return false
+    return task.registered
   }
   eventCity(e: Task) {
     return getCity(e.addressApiResult?.results[0].address_components!)

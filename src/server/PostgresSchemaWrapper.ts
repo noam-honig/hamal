@@ -8,6 +8,7 @@ import {
 
 export class PostgresSchemaWrapper implements PostgresPool {
   constructor(private pool: Pool, private schema: string) {}
+
   async connect(): Promise<PoolClient> {
     let r = await this.pool.connect()
 
@@ -25,7 +26,6 @@ export class PostgresSchemaWrapper implements PostgresPool {
 }
 
 export async function createPostgresDataProviderWithSchema(args: {
-  entities: any[]
   schema: string
   connectionString?: string
   disableSsl: boolean
@@ -41,10 +41,10 @@ export async function createPostgresDataProviderWithSchema(args: {
   const result = new SqlDatabase(
     new PostgresDataProvider(new PostgresSchemaWrapper(pool, args.schema!))
   )
-  const sb = new PostgresSchemaBuilder(result, args.schema)
-  const remult = new Remult(result)
-  await sb.ensureSchema(
-    args.entities.map((e) => remult.repo(e as any).metadata)
-  )
+  result.ensureSchema = async (entities) => {
+    const sb = new PostgresSchemaBuilder(result, args.schema)
+    sb.ensureSchema(entities)
+  }
+
   return result
 }

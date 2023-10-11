@@ -2,7 +2,7 @@ import { Component, Input, OnInit, Output } from '@angular/core'
 import { BusyService } from '../common-ui-elements'
 import { EventEmitter } from 'events'
 
-import { remult } from 'remult'
+import { remult, repo } from 'remult'
 import { Roles } from '../users/roles'
 
 import { UIToolsService } from '../common/UIToolsService'
@@ -40,19 +40,30 @@ export class EventInfoComponent implements OnInit {
       '_blank'
     )
   }
-  registerToEvent() {
-    alert('123')
-    //[ ] to implement
+  async registerToEvent() {
+    const v = await this.e._.relations.volunteers.findFirst(
+      { volunteerId: remult.user!.id },
+      { createIfNotFound: true }
+    )
+    v.canceled = false
+    await v.save()
+    this.e._.reload()
   }
-  removeFromEvent() {
-    //[ ] to implement
+  async removeFromEvent() {
+    const v = await this.e._.relations.volunteers.findFirst({
+      volunteerId: remult.user!.id,
+    })
+    if (v) {
+      v.canceled = true
+      await v.save()
+    }
+    this.e._.reload()
   }
   isAdmin() {
     return remult.isAllowed(Roles.admin)
   }
   registered() {
-    //[ ] to implement
-    return false
+    return this.e.registered
   }
 
   ngOnInit(): void {}

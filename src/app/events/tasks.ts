@@ -1,23 +1,25 @@
 import {
   IdEntity,
   Entity,
-  FieldsMetadata,
   Allow,
   EntityRef,
   FieldMetadata,
   Validators,
-  isBackend,
   ValueConverters,
   remult,
   ValueListFieldType,
   Fields,
   Field,
+  Relations,
+  dbNamesOf,
+  SqlDatabase,
+  repo,
+  Remult,
 } from 'remult'
 import {
   DataControl,
   DataControlInfo,
   DataControlSettings,
-  GridSettings,
   RowButton,
 } from '../common-ui-elements/interfaces'
 
@@ -26,6 +28,7 @@ import { Roles } from '../users/roles'
 import { UITools } from '../common/UITools'
 import { GeocodeResult } from '../common/address-input/google-api-helpers'
 import { PhoneField } from './phone'
+import { volunteerInTask } from './volunteerInTask'
 
 @ValueListFieldType({
   caption: 'סטטוס משימה',
@@ -129,12 +132,33 @@ export class Task extends IdEntity {
   phone1Description = ''
   @Fields.integer<Task>({
     caption: 'מתנדבים רשומים',
+    allowApiUpdate: false,
   })
   registeredVolunteers = 0
   @Fields.createdAt()
   createdAt = new Date()
   @Fields.string()
   createUserId = remult.user?.id!
+
+  @Fields.boolean<Task>({
+    caption: 'רשום לאירוע',
+    sqlExpression: async (e) => {
+      const v = await dbNamesOf(volunteerInTask)
+      return `(select true registered from ${v} where ${
+        v.taskId
+      }=${await e.getDbName()}.${await e.fields.id.getDbName()} 
+      and ${await SqlDatabase.filterToRaw<volunteerInTask>(
+        repo(volunteerInTask),
+        {
+          volunteerId: remult.user?.id,
+          canceled: false,
+        }
+      )})`
+    },
+  })
+  registered = false
+  @Relations.toMany<Task, volunteerInTask>(() => volunteerInTask)
+  volunteers?: volunteerInTask[]
 
   openEditDialog(
     ui: UITools,
@@ -200,73 +224,6 @@ export function mapFieldMetadataToFieldRef(
   }
   return e.fields.find(y as FieldMetadata)
 }
-@Entity<volunteerInTask>('volunteersForTask', {
-  allowApiCrud: Allow.authenticated,
-  allowApiDelete: false,
-  apiPrefilter: () => ({
-    volunteerId: !remult.isAllowed([Roles.admin])
-      ? [remult.user?.id!]
-      : undefined,
-  }),
-  saving: async (self) => {
-    if (self.isNew() && isBackend()) {
-      self.createUserId = remult.user!.id
-    }
-    if (self.canceled && self.$.canceled.valueChanged()) {
-      self.cancelUserId = remult.user!.id
-    }
-    if (self.isNew() || self.$.canceled.valueChanged())
-      self.registerStatusDate = new Date()
-  },
-})
-export class volunteerInTask extends IdEntity {
-  @Fields.string()
-  eventId = ''
-  @Fields.string()
-  volunteerId = ''
-
-  @Fields.boolean({ allowApiUpdate: Roles.admin })
-  canceled = false
-
-  @Fields.createdAt()
-  createdAt = new Date()
-  @Fields.string()
-  createUserId = remult.user?.id!
-
-  @Fields.date()
-  registerStatusDate = new Date()
-  @Fields.string({ allowNull: true })
-  cancelUserId: string | null = null
-
-  static async displayVolunteer({ event, ui }: { event: Task; ui: UITools }) {
-    const gridSettings: GridSettings<volunteerInTask> =
-      new GridSettings<volunteerInTask>(remult.repo(volunteerInTask), {
-        columnOrderStateKey: 'volunteers-in-event',
-        rowsInPage: 50,
-        allowUpdate: true,
-        where: () => ({ eventId: event.id }),
-        orderBy: { registerStatusDate: 'desc' },
-        knowTotalRows: true,
-        numOfColumnsInGrid: 10,
-        columnSettings: (ev: FieldsMetadata<volunteerInTask>) => [
-          { width: '100', field: ev.volunteerId, readonly: true },
-          ev.registerStatusDate,
-          ev.createUserId,
-          ev.canceled,
-        ],
-        rowCssClass: (v) => {
-          if (v.canceled) return 'forzen'
-          return ''
-        },
-      })
-    await ui.gridDialog({
-      title: event.title,
-
-      settings: gridSettings,
-    })
-  }
-}
-
 export const day = 86400000
 
 export function eventDisplayDate(
@@ -306,22 +263,3 @@ export function eventDisplayDate(
   if (group) return 'gcr'
   return ''
 }
-
-/*
-
-select  (select name from helpers where id=helper) helperName,
-  (select phone from helpers where id=helper) helperName,
-times,
-lastTime
-from (
-select 
- helper,count(*) times,max(createDate) lastTime
-from volunteersInEvent 
-where eventId in (select id from events where type='packaging' and eventStatus=9 )
-    and canceled=false
-group by helper) as x
-where helper not in (select id from helpers where doNotSendSms=true)
- and helper not in (select helper from volunteersInEvent where eventId in (select id from events where eventStatus=0))
-order by 3 desc
-
-*/

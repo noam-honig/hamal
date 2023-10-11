@@ -100,3 +100,4 @@ export class AppComponent implements OnInit {
     if (this.uiService.isScreenSmall()) this.sidenav.close()
   }
 }
+//[ ] - fix api to work with this url
