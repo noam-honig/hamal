@@ -1,7 +1,9 @@
 export async function sendSms(phone: string, message: string): Promise<any> {
-  console.log('before import fetch')
+  if (process.env['dev']) {
+    console.log({ phone, message })
+    return
+  }
   const fetch = await import('node-fetch')
-  console.log('after import fetch')
   let un = process.env['SMS_UN']
   let pw = process.env['SMS_PW']
   let accid = process.env['SMS_ACCID']

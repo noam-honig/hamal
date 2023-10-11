@@ -1,0 +1,98 @@
+<mat-dialog-content class="dialog-container">
+  <div
+    style="display: flex; justify-content: space-between; align-items: center"
+  >
+    <h3>{{ e.title }}</h3>
+    <button mat-icon-button (click)="edit()" *ngIf="isAdmin()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+
+  <span>{{ getCity() }}</span>
+
+  <span
+    >{{ displayDate() }}<span *ngIf="e.startTime">, {{ e.startTime }}</span
+    ><span *ngIf="e.endTime"> - {{ e.endTime }}</span>
+  </span>
+  <div class="space-above" style="white-space: pre-line">
+    {{ e.description }}
+  </div>
+  <div *ngIf="e.address" class="space-above">
+    <strong>כתובל</strong>
+    <div class="phone-container" style="justify-content: space-between">
+      <span (click)="openWaze()">
+        <img src="assets/waze.png" />
+      </span>
+      <div style="flex-grow: 1">
+        <a (click)="openWaze()">
+          <span style="display: block"> {{ e.address }} </span>
+        </a>
+      </div>
+      <span (click)="openGoogleMap()">
+        <img src="assets/google_maps_icon.png" />
+      </span>
+    </div>
+  </div>
+  <div *ngIf="e.phone1" class="space-above">
+    <strong>טלפונים</strong>
+    <div class="phone-container">
+      <span
+        mat-mini-fab
+        style="vertical-align: middle; cursor: pointer"
+        color="primary"
+        (click)="sendWhatsapp(e.phone1)"
+      >
+        <img src="assets/whatsapp.png" />
+      </span>
+      <a href="tel:{{ e.phone1 }}">
+        <button mat-mini-fab style="vertical-align: middle" color="primary">
+          <mat-icon>call</mat-icon>
+        </button>
+      </a>
+      <div>
+        <a href="tel:{{ e.phone1 }}">{{ e.phone1Description }}</a
+        >,
+        {{ e.phone1 }}
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="e.requiredVolunteers">
+    מתנדבים: {{ e.requiredVolunteers }} /
+    {{ e.registeredVolunteers }}
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions style="display: flex; justify-content: space-between">
+  <div>
+    <button
+      mat-raised-button
+      color="primary"
+      *ngIf="
+        !registered() &&
+        (e.registeredVolunteers < e.requiredVolunteers ||
+          e.requiredVolunteers == 0)
+      "
+      (click)="registerToEvent()"
+    >
+      אני אבצע
+    </button>
+    <span
+      mat-raised-button
+      color="primary"
+      *ngIf="
+        !registered() &&
+        e.registeredVolunteers >= e.requiredVolunteers &&
+        e.requiredVolunteers > 0
+      "
+    >
+      יש מספיק מתנדבים
+    </span>
+    <span *ngIf="registered()">
+      רשומים לאירוע
+      <a (click)="removeFromEvent()"> לא אוכל להגיע </a>
+    </span>
+  </div>
+  <div style="margin-left: 5px; margin-right: 5px" *ngIf="!noClose">
+    <button mat-raised-button [mat-dialog-close]>סגור</button>
+  </div>
+</mat-dialog-actions>

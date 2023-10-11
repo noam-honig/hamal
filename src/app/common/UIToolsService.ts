@@ -9,9 +9,14 @@ import {
   SelectValueDialogComponent,
 } from 'common-ui-elements'
 import { terms } from '../terms'
-import { InputAddressResult, UITools } from './UITools'
+import {
+  GridDialogArgs,
+  InputAddressResult,
+  AreaDialogArgs,
+  UITools,
+} from './UITools'
 import { TextAreaDataControlComponent } from './textarea-data-control/textarea-data-control.component'
-import { AddressInputComponent } from '../common-ui-elements/address-input/address-input.component'
+import { AddressInputComponent } from './address-input/address-input.component'
 
 @Injectable()
 export class UIToolsService implements UITools {
@@ -37,6 +42,22 @@ export class UIToolsService implements UITools {
           message: extractError(err),
           isAQuestion: false,
         })
+    )
+  }
+  async gridDialog(args: GridDialogArgs): Promise<void> {
+    await openDialog(
+      (
+        await import('./grid-dialog/grid-dialog.component')
+      ).GridDialogComponent,
+      (x) => (x.args = args)
+    )
+  }
+  async areaDialog(args: AreaDialogArgs): Promise<void> {
+    await openDialog(
+      (
+        await import('./data-area-dialog/data-area-dialog.component')
+      ).DataAreaDialogComponent,
+      (x) => (x.args = args)
     )
   }
   private mediaMatcher: MediaQueryList = matchMedia(`(max-width: 720px)`)

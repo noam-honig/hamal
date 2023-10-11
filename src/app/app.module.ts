@@ -26,8 +26,15 @@ import { remult } from 'remult'
 import { SignInController } from './users/SignInController'
 import { TextAreaDataControlComponent } from './common/textarea-data-control/textarea-data-control.component'
 import { DotsMenuComponent } from './common/dot-menu.component'
-import { AddressInputComponent } from './common-ui-elements/address-input/address-input.component'
+import { AddressInputComponent } from './common/address-input/address-input.component'
 import { CardInMiddleComponent } from './card-in-middle/card-in-middle.component'
+import { OrgEventsComponent } from './events/org-events.component'
+import { EventCardComponent } from './event-card/event-card.component'
+import { EventInfoComponent } from './event-info/event-info.component'
+import {
+  TransitionGroupComponent,
+  TransitionGroupItemDirective,
+} from './event-card/transition-group'
 
 @NgModule({
   declarations: [
@@ -40,6 +47,11 @@ import { CardInMiddleComponent } from './card-in-middle/card-in-middle.component
     AddressInputComponent,
     DotsMenuComponent,
     CardInMiddleComponent,
+    OrgEventsComponent,
+    EventCardComponent,
+    EventInfoComponent,
+    TransitionGroupItemDirective,
+    TransitionGroupComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,8 +1,10 @@
 import { FieldRef } from 'remult'
+import { GeocodeResult, Location } from './address-input/google-api-helpers'
 import {
-  GeocodeResult,
-  Location,
-} from '../common-ui-elements/address-input/google-api-helpers'
+  DataAreaFieldsSetting,
+  GridSettings,
+  RowButton,
+} from '../common-ui-elements/interfaces'
 
 export interface UITools {
   selectValuesDialog<
@@ -17,6 +19,17 @@ export interface UITools {
   yesNoQuestion: (question: string) => Promise<boolean>
   info: (info: string) => void
   error: (err: any) => void
+  gridDialog(args: GridDialogArgs): Promise<void>
+  areaDialog(args: AreaDialogArgs): Promise<void>
+  selectValuesDialog<
+    T extends {
+      caption?: string
+    }
+  >(args: {
+    values: T[]
+    onSelect: (selected: T) => void
+    title?: string
+  }): Promise<void>
 }
 
 export interface customInputOptions {
@@ -43,4 +56,27 @@ export interface InputAddressResult {
   location: Location
   city: string
   autoCompleteResult: GeocodeResult
+}
+
+export interface GridDialogArgs {
+  title: string
+  settings: GridSettings<any>
+  ok?: () => void
+  cancel?: () => void
+  validate?: () => Promise<void>
+  buttons?: button[]
+}
+export interface button {
+  text: string
+  click: (close: () => void) => void
+  visible?: () => boolean
+}
+export interface AreaDialogArgs {
+  title?: string
+  helpText?: string
+  fields: DataAreaFieldsSetting<any>[]
+  ok: () => void
+  cancel?: () => void
+  validate?: () => Promise<void>
+  buttons?: button[]
 }

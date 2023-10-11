@@ -1,13 +1,9 @@
-import { config } from 'dotenv'
-config() //loads the configuration from the .env file
 import express from 'express'
 import sslRedirect from 'heroku-ssl-redirect'
 import helmet from 'helmet'
 import compression from 'compression'
 import { api } from './api'
 import session from 'cookie-session'
-
-import { SignInController } from '../app/users/SignInController'
 
 async function startup() {
   const app = express()
@@ -16,7 +12,7 @@ async function startup() {
     session({
       secret:
         process.env['NODE_ENV'] === 'production'
-          ? process.env['SESSION_SECRET']
+          ? process.env['TOKEN_SIGN_KEY']
           : 'my secret',
     })
   )

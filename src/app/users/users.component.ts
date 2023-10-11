@@ -30,7 +30,7 @@ export class UsersComponent implements OnInit {
     orderBy: { name: 'asc' },
     rowsInPage: 100,
 
-    columnSettings: (users) => [users.name, users.admin],
+    columnSettings: (users) => [users.name, users.phone, users.admin],
     gridButtons: [
       {
         name: 'Excel',
@@ -46,7 +46,6 @@ export class UsersComponent implements OnInit {
               terms.passwordDeleteConfirmOf + ' ' + this.users.currentRow.name
             )
           ) {
-            
             this.ui.info(terms.passwordDeletedSuccessful)
           }
         },
@@ -59,3 +58,5 @@ export class UsersComponent implements OnInit {
 
   ngOnInit() {}
 }
+//[ ] add change log
+//[ ] record create user

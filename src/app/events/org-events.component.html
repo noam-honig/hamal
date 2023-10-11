@@ -1,0 +1,20 @@
+<div class="full-page">
+  <div>
+    <button mat-raised-button color="primary" (click)="addTask()">
+      הוספת משימה
+    </button>
+  </div>
+  <div class="grow-item">
+    <ng-container *ngIf="events.length != 1 || isAdmin()">
+      <app-event-card [tasks]="events"></app-event-card>
+    </ng-container>
+    <div style="display: flex; justify-content: center">
+      <mat-card
+        *ngIf="events.length == 1 && !isAdmin()"
+        style="max-width: 300px"
+      >
+        <app-event-info [e]="events[0]" [noClose]="true"></app-event-info>
+      </mat-card>
+    </div>
+  </div>
+</div>

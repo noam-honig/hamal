@@ -7,7 +7,10 @@ import {
   AfterViewInit,
 } from '@angular/core'
 import { ErrorStateMatcher } from '@angular/material/core'
-import { CustomComponentArgs, CustomDataComponent } from '../interfaces'
+import {
+  CustomComponentArgs,
+  CustomDataComponent,
+} from '../../common-ui-elements/interfaces'
 
 import { FieldRef } from 'remult'
 
@@ -18,7 +21,7 @@ import {
   GeocodeResult,
   parseUrlInAddress,
 } from './google-api-helpers'
-import { InputAddressResult } from '../../common/UITools'
+import { InputAddressResult } from '../UITools'
 
 @Component({
   selector: 'app-address-input',

@@ -513,7 +513,7 @@ export interface IDataSettings<rowType> {
 export interface RowButton<rowType> {
   name?: string
   visible?: (r: rowType) => boolean
-  click?: (r: rowType) => void
+  click: (r: rowType) => void
   showInLine?: boolean
   textInMenu?: string | ((row: rowType) => string)
   icon?: string

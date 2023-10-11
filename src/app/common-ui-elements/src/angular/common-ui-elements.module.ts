@@ -22,11 +22,7 @@ import {
 } from '@angular/common/http'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { BusyService, LoaderInterceptor } from './wait/busy-service'
-import {
-  MatDialog,
-  MatDialogConfig,
-  MatDialogModule,
-} from '@angular/material/dialog'
+import { MatDialog, MatDialogModule } from '@angular/material/dialog'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { WaitComponent } from './wait/wait.component'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -45,6 +41,9 @@ import { BidiModule } from '@angular/cdk/bidi'
 import { Repository, EntityOrderBy, EntityFilter, EntityMetadata } from 'remult'
 import { CommonUIElementsPluginsService } from './CommonUIElementsPluginsService'
 
+import { GridDialogComponent } from '../../../common/grid-dialog/grid-dialog.component'
+import { dialogConfigMember } from './dialogConfigMember'
+
 @NgModule({
   declarations: [
     DataControl2Component,
@@ -55,6 +54,7 @@ import { CommonUIElementsPluginsService } from './CommonUIElementsPluginsService
     DataControl3Component,
     SelectValueDialogComponent,
     FilterDialogComponent,
+    GridDialogComponent,
   ],
   imports: [
     FormsModule,
@@ -104,13 +104,6 @@ export class CommonUIElementsModule {
       BusyService.singleInstance.startBusyWithProgress()
   }
 }
-export function DialogConfig(config: MatDialogConfig) {
-  return function (target: any) {
-    target[dialogConfigMember] = config
-    return target
-  }
-}
-const dialogConfigMember = Symbol('dialogConfigMember')
 var _matDialog: MatDialog
 
 export async function openDialog<T, C>(
