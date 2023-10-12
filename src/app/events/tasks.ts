@@ -48,6 +48,7 @@ export class taskStatus {
     Category.delivery,
 
     new Category('איסוף מזון וציוד'),
+    new Category('הכנת מזון'),
     new Category('אחר'),
   ],
 })
@@ -122,10 +123,7 @@ export class Task extends IdEntity {
       ),
   })
   address = ''
-  @Fields.boolean({ caption: 'אפשר גם ללא רכב' })
-  okWithoutCar = false
-  @Fields.boolean({ caption: 'אפשר מהבית' })
-  okFromHome = false
+
   @PhoneField()
   phone1 = ''
   @Fields.string({ caption: 'איש קשר' })
@@ -177,8 +175,6 @@ export class Task extends IdEntity {
         e.phone1,
         e.phone1Description,
         e.requiredVolunteers,
-        e.okWithoutCar,
-        e.okFromHome,
         e.eventStatus,
       ],
       ok: () => this.save().then(() => saved && saved()),

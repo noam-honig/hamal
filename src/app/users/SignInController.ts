@@ -69,12 +69,12 @@ export class SignInController extends ControllerBase {
   }
   @BackendMethod({ allowed: true })
   async signInWithOtp(): Promise<UserInfo> {
-    const otp = otps.get(this.phone)
-    if (!otp || otp.expire < new Date()) {
+    const otp = getOtp(this.phone)
+    if (!otp) {
       this.askForOtp = false
       throw Error('פג תוקף הקוד, נסה שנית')
     }
-    if (otp.otp != this.otp) throw Error('קוד לא תקין')
+    if (otp != this.otp) throw Error('קוד לא תקין')
     const user = await repo(User).findFirst({ phone: this.phone })
     if (!user) throw 'מספר טלפון לא מוכר'
     const roles: string[] = []
@@ -99,6 +99,13 @@ export class SignInController extends ControllerBase {
   static currentUser() {
     return remult.user
   }
+  @BackendMethod({ allowed: Roles.admin })
+  static async getOtpFor(phone: string) {
+    const otp = getOtp(phone)
+    if (!otp)
+      return 'אין קוד עבור משתמש זה, אנא הנחו אותו להקליד את מספר הטלפון שלו ולבקש שנית'
+    return 'הקוד הוא ' + otp
+  }
 }
 function generateRandomSixDigitNumber() {
   // Generate a random number between 100,000 (inclusive) and 1,000,000 (exclusive)
@@ -115,3 +122,8 @@ export function getTitle() {
 }
 
 const DEFAULT_NAME = 'עוזרים לצה״ל במה שאפשר'
+function getOtp(phone: string) {
+  const otp = otps.get(phone)
+  if (!otp || otp.expire < new Date()) return undefined
+  return otp.otp
+}

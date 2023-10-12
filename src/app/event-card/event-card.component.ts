@@ -31,6 +31,21 @@ export class EventCardComponent implements OnInit {
   @Input() listOptions: RowButton<any>[] = []
   menuOptions: RowButton<Task>[] = [
     {
+      name: 'שכפול משימה',
+      click: async (oldE) => {
+        const e = remult.repo(Task).create(oldE)
+        e.eventDate = new Date()
+        e.eventDate.setDate(e.eventDate.getDate() + 1)
+        this.dialog.areaDialog({
+          title: 'שכפול משימה',
+          fields: [e.$.eventDate],
+          ok: async () => {
+            await e.save()
+          },
+        })
+      },
+    },
+    {
       name: 'העבר לארכיב',
       click: async (e) => {
         e.eventStatus = taskStatus.archive
@@ -83,9 +98,8 @@ export class EventCardComponent implements OnInit {
       if (!firstLongLat) firstLongLat = getLongLat(e.addressApiResult)
       if (getLongLat(e.addressApiResult) != firstLongLat)
         this.showLocation = true
-      let d = this.dates.find((d) => d.date == eventDisplayDate(e, true))
-      if (!d)
-        this.dates.push((d = { date: eventDisplayDate(e, true), events: [] }))
+      let d = this.dates.find((d) => d.date == eventDisplayDate(e))
+      if (!d) this.dates.push((d = { date: eventDisplayDate(e), events: [] }))
       d.events.push(e)
       let city = this.cities.find((c) => c.id == this.eventCity(e))
       if (!city) {

@@ -9,6 +9,7 @@ import { GridSettings } from 'common-ui-elements/interfaces'
 import { remult, repo } from 'remult'
 import { saveToExcel } from '../common-ui-elements/interfaces/src/saveGridToExcel'
 import { BusyService } from '../common-ui-elements'
+import { SignInController } from './SignInController'
 
 @Component({
   selector: 'app-users',
@@ -41,6 +42,12 @@ export class UsersComponent implements OnInit {
       {
         name: 'פרטים',
         click: async (e) => e.editDialog(this.ui),
+      },
+      {
+        name: 'הצג קוד חד פעמי',
+        click: async (e) => {
+          await this.ui.error(await SignInController.getOtpFor(e.phone))
+        },
       },
     ],
     confirmDelete: async (h) => {
