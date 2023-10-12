@@ -11,6 +11,7 @@ import { Roles } from './roles'
 import { terms } from '../terms'
 import { PhoneField } from '../events/phone'
 import { UITools } from '../common/UITools'
+import { DataControl } from '../common-ui-elements/interfaces'
 
 @Entity<User>('Users', {
   allowApiRead: Allow.authenticated,
@@ -28,12 +29,14 @@ import { UITools } from '../common/UITools'
   },
 })
 export class User extends IdEntity {
+  @DataControl({ width: '110px' })
   @Fields.string({
     validate: [Validators.required, Validators.uniqueOnBackend],
     caption: terms.username,
   })
   name = ''
 
+  @DataControl({ width: '110px' })
   @PhoneField({
     validate: [Validators.required, Validators.uniqueOnBackend],
     inputType: 'tel',
