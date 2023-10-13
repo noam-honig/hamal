@@ -151,7 +151,7 @@ export class Task extends IdEntity {
           volunteerId: remult.user?.id,
           canceled: false,
         }
-      )})`
+      )} limit 1)`
     },
   })
   registered = false

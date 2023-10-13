@@ -40,14 +40,21 @@ export class EventInfoComponent implements OnInit {
       '_blank'
     )
   }
+  inProgress = false
   async registerToEvent() {
-    const v = await this.e._.relations.volunteers.findFirst(
-      { volunteerId: remult.user!.id },
-      { createIfNotFound: true }
-    )
-    v.canceled = false
-    await v.save()
-    this.e._.reload()
+    if (this.inProgress) return
+    this.inProgress = true
+    try {
+      const v = await this.e._.relations.volunteers.findFirst(
+        { volunteerId: remult.user!.id },
+        { createIfNotFound: true }
+      )
+      v.canceled = false
+      await v.save()
+      this.e._.reload()
+    } finally {
+      this.inProgress = false
+    }
   }
   async removeFromEvent() {
     const v = await this.e._.relations.volunteers.findFirst({
