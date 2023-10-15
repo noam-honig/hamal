@@ -46,9 +46,18 @@ export class taskStatus {
   caption: 'קטגוריה',
   getValues: () => [
     Category.delivery,
-
     new Category('איסוף מזון וציוד'),
     new Category('הכנת מזון'),
+    new Category('הובלה של ציוד/ פינוי ציוד'),
+    new Category('אריזה של חבילות מזון'),
+    new Category('עזרה למשפחות עם ילדים'),
+    new Category('עזרה לקשיש'),
+    new Category('עזרה בתיקונים בבית/ במקלט'),
+    new Category('הפעלה של ילדים ( הפגה)'),
+    new Category('הפעלה של מבוגרים ( הפגה)'),
+    new Category('הכנת עוגות/ארוחות/חלות'),
+    new Category('חלוקה של… ( חבילות/ חלות ) למשפחות'),
+    new Category('טלפנים לחמ"ל מתנדבים'),
     new Category('אחר'),
   ],
 })
